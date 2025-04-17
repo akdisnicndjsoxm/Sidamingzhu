@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>四大名著知识点测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            background-size: 600% 600%;
+            animation: gradient 15s ease infinite;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        #question {
+            font-size: 20px;
+            margin-bottom: 20px;
+            transition: opacity 0.5s ease;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .options label {
+            margin: 5px 0;
+            font-size: 18px;
+        }
+        button {
+            font-size: 18px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .hidden {
+            display: none;
+        }
+        .fade-out {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>四大名著知识点测试</h1>
+    <div id="question"></div>
+    <div class="options" id="options"></div>
+    <button onclick="generateQuestion()">下一题</button>
+
+    <script>
+        // 题库
+        const questions = [
+            {
+                type: "multiple-choice",
+                question: "《红楼梦》的作者是谁？",
+                options: ["曹雪芹", "施耐庵", "吴承恩", "罗贯中"],
+                answer: "曹雪芹"
+            },
+            {
+                type: "multiple-choice",
+                question: "《西游记》中，孙悟空的兵器是什么？",
+                options: ["金箍棒", "青龙偃月刀", "如意金箍棒", "方天画戟"],
+                answer: "如意金箍棒"
+            },
+            {
+                type: "fill-in-the-blank",
+                question: "《水浒传》中，梁山好汉共有____位。",
+                answer: "108"
+            },
+            {
+                type: "multiple-choice",
+                question: "《三国演义》中，诸葛亮的字是什么？",
+                options: ["孔明", "孟德", "玄德", "翼德"],
+                answer: "孔明"
+            },
+            {
+                type: "fill-in-the-blank",
+                question: "《红楼梦》中，林黛玉的丫鬟叫____。",
+                answer: "紫鹃"
+            }
+        ];
+
+        // 已经随机过的题目
+        const usedQuestions = new Set();
+
+        // 生成随机题目
+        function generateQuestion() {
+            const questionElement = document.getElementById("question");
+            const optionsElement = document.getElementById("options");
+
+            // 淡出动画
+            questionElement.classList.add("fade-out");
+            optionsElement.innerHTML = "";
+            optionsElement.classList.add("hidden");
+
+            setTimeout(() => {
+                // 清空之前的选项
+                questionElement.classList.remove("fade-out");
+                questionElement.classList.add("fade-in");
+
+                if (usedQuestions.size === questions.length) {
+                    alert("所有题目都已展示完毕！");
+                    usedQuestions.clear();
+                }
+
+                let randomQuestion;
+                do {
+                    const randomIndex = Math.floor(Math.random() * questions.length);
+                    randomQuestion = questions[randomIndex];
+                } while (usedQuestions.has(randomIndex));
+
+                usedQuestions.add(randomIndex);
+
+                if (randomQuestion.type === "multiple-choice") {
+                    questionElement.innerText = randomQuestion.question;
+                    randomQuestion.options.forEach((option, index) => {
+                        const label = document.createElement("label");
+                        const input = document.createElement("input");
+                        input.type = "radio";
+                        input.name = "option";
+                        input.value = option;
+                        label.appendChild(input);
+                        label.appendChild(document.createTextNode(option));
+                        optionsElement.appendChild(label);
+                    });
+                } else if (randomQuestion.type === "fill-in-the-blank") {
+                    questionElement.innerHTML = randomQuestion.question + " <input type='text' id='fill-in-answer'>";
+                }
+
+                optionsElement.classList.remove("hidden");
+            }, 500); // 等待动画完成
+        }
+
+        // 初始化第一题
+        generateQuestion();
+    </script>
+</body>
+</html>
